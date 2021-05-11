@@ -35,16 +35,16 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 GRAY = (200, 200, 200)
+image_lst = ['0.png','1.png','2.png','3.png','4.png','5.png','6.png','8.png','9.png','10.png','11.png','7.png']
 
 screen, clock = init('Мемопад')
 
 
 class Block(pygame.sprite.Sprite):
-    image_lst = ['0.png','1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png','9.png','10.png','11.png']
 
-    def __init__(self, speed=5):
+    def __init__(self, typ, speed=5):
         super().__init__()
-        img_file = random.choice(self.image_lst)
+        img_file = typ
         self.image = pygame.image.load(img_file).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(WIN_WIDTH)
@@ -72,7 +72,7 @@ def change_state(event, current_state):
 class Car(pygame.sprite.Sprite):
     def __init__(self, x, y, speed=5):
         super().__init__()
-        self.image = pygame.image.load('Car.png').convert_alpha()
+        self.image = pygame.image.load('7.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -81,17 +81,23 @@ class Car(pygame.sprite.Sprite):
 
 # Создаем группы спрайтов:
 block_list = pygame.sprite.Group()
+lol_list = pygame.sprite.Group()
 all_sprites_list = pygame.sprite.Group()
 
 # Создаем блоки - препятствия и добавляем их в группы:
 for i in range(5):
-    block = Block(random.randint(3, 6))
+    block = Block(image_lst[random.randint(0, 9)], random.randint(3, 6))
     block_list.add(block)
     all_sprites_list.add(block)
 
+for i in range(15):
+    block1=Block(image_lst[random.randint(10, 11)], random.randint(3, 6))
+    lol_list.add(block1)
+    all_sprites_list.add(block1)
+
 start_image = pygame.image.load("pingas.jpg").convert_alpha()
-p1 = pygame.image.load('Car.png').convert()
-p2 = pygame.image.load('Car_2.png').convert()
+p1 = pygame.image.load('7.png').convert()
+p2 = pygame.image.load('11.png').convert()
 background_sound=pygame.mixer.Sound("pingas.mp3")
 crash_sound=pygame.mixer.Sound("Ohhh Meme.mp3")
 # Создаем спрайт игрока
@@ -112,10 +118,10 @@ while True:
                 current_state = change_state(event, current_state)
             if event.key == pygame.K_1:
                 if current_state == 0:
-                    player.image = pygame.image.load('Car.png').convert_alpha()
+                    player.image = pygame.image.load('7.png').convert_alpha()
             if event.key == pygame.K_2:
                 if current_state == 0:
-                    player.image = pygame.image.load('Car_2.png').convert_alpha()
+                    player.image = pygame.image.load('11.png').convert_alpha()
             if event.key == pygame.K_r:
                 if current_state == 3:
                     current_state = 1
@@ -133,6 +139,7 @@ while True:
         pos = pygame.mouse.get_pos()
         player.rect.x = pos[0] - player.rect.width // 2
         block_list.update()
+        lol_list.update()
         all_sprites_list.draw(screen)
 
     if current_state == 2:
