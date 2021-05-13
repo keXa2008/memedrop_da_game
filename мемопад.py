@@ -1,6 +1,6 @@
 import pygame
 import random
-
+import math
 
 # Настройка игрового окна
 def init(caption):
@@ -72,7 +72,7 @@ def change_state(event, current_state):
 class Car(pygame.sprite.Sprite):
     def __init__(self, x, y, speed=5):
         super().__init__()
-        self.image = pygame.image.load('7.png').convert_alpha()
+        self.image = pygame.image.load('sonic.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -90,24 +90,27 @@ for i in range(5):
     block_list.add(block)
     all_sprites_list.add(block)
 
-for i in range(15):
+for i in range(20):
     block1=Block(image_lst[random.randint(10, 11)], random.randint(3, 6))
     lol_list.add(block1)
     all_sprites_list.add(block1)
 
 start_image = pygame.image.load("pingas.jpg").convert_alpha()
-p1 = pygame.image.load('7.png').convert()
-p2 = pygame.image.load('11.png').convert()
+p1 = pygame.image.load('sonic.png').convert_alpha()
+p2 = pygame.image.load('tails.png').convert_alpha()
 background_sound=pygame.mixer.Sound("pingas.mp3")
 crash_sound=pygame.mixer.Sound("Ohhh Meme.mp3")
 # Создаем спрайт игрока
-player = Car(WIN_WIDTH // 2, WIN_HEIGHT-100)
+player = Car(WIN_WIDTH // 2, WIN_HEIGHT-120)
 
 # Добавляем игрока в группу all_sprites_list:
 all_sprites_list.add(player)
 text_pos = (WIN_WIDTH // 3, WIN_HEIGHT // 2)
 current_state = 0
 background_sound.play(-1)
+time=0
+score=0
+best_score=0
 while True:
     # обработка событий мыши  клавиатуры:
     for event in pygame.event.get():
@@ -118,20 +121,22 @@ while True:
                 current_state = change_state(event, current_state)
             if event.key == pygame.K_1:
                 if current_state == 0:
-                    player.image = pygame.image.load('7.png').convert_alpha()
+                    player.image = p1
             if event.key == pygame.K_2:
                 if current_state == 0:
-                    player.image = pygame.image.load('11.png').convert_alpha()
+                    player.image = p2
             if event.key == pygame.K_r:
                 if current_state == 3:
                     current_state = 1
+                    time=0
+                    score=0
     screen.fill(GRAY)
 
     if current_state == 0:
         screen.blit(start_image, (-200, 0))
-        draw_text(screen, 'Нажми 1 для выбора грустного', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 7))
+        draw_text(screen, 'Нажми 1 для выбора цопика', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 7))
         screen.blit(p1, (WIN_WIDTH//5, WIN_HEIGHT//7.5))
-        draw_text(screen, 'Нажми 2 для выбора амогуса', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 3))
+        draw_text(screen, 'Нажми 2 для выбора тейлзьа', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 3))
         screen.blit(p2, (WIN_WIDTH//5, WIN_HEIGHT//3))
         draw_text(screen, 'Нажми Пробел чтобы начать', 36, BLUE, text_pos)
 
@@ -141,18 +146,25 @@ while True:
         block_list.update()
         lol_list.update()
         all_sprites_list.draw(screen)
+        time+=1/FPS
+        score+=math.sqrt(math.exp(time)/time)/5
+        draw_text(screen, "Time:"+str(int(time)), 30, RED, (0,0))
+        draw_text(screen, "Score:"+str(int(score)), 30, RED, (0,30))
 
     if current_state == 2:
         all_sprites_list.draw(screen)
         draw_text(screen, 'PAUSE', 36, RED, text_pos)
 
     if current_state == 3:
+        draw_text(screen, str(int(score)), 36, RED, (WIN_WIDTH//2, 0))
         draw_text(screen, 'LOL!!!!1!!', 36, RED, text_pos)
         crash_sound.play(0)
 
 
     if pygame.sprite.spritecollideany(player, block_list):
         current_state = 3
+        if score > best_score:
+            best_score=score
 
     # конец прорисовки окна
     pygame.display.update()
