@@ -134,9 +134,9 @@ while True:
 
     if current_state == 0:
         screen.blit(start_image, (-200, 0))
-        draw_text(screen, 'Нажми 1 для выбора цопика', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 7))
+        draw_text(screen, 'Нажми 1 для выбора Соника', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 7))
         screen.blit(p1, (WIN_WIDTH//5, WIN_HEIGHT//7.5))
-        draw_text(screen, 'Нажми 2 для выбора тейлзьа', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 3))
+        draw_text(screen, 'Нажми 2 для выбора Тейлза', 36, BLUE, (WIN_WIDTH // 3, WIN_HEIGHT // 3))
         screen.blit(p2, (WIN_WIDTH//5, WIN_HEIGHT//3))
         draw_text(screen, 'Нажми Пробел чтобы начать', 36, BLUE, text_pos)
 
